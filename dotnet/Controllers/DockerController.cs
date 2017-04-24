@@ -16,35 +16,35 @@ namespace Docker.WebApi.Controllers
         public string GetList()
         {
             var url = "/images/json";
-            var result = DockerHelper.ExecApi(url);
-            
+            var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
             return result;
         }
 
         // GET api/values/5
         [HttpGet("Start/{id}")]
-        public string Start(int id)
+        public IActionResult Start(string id)
         {
-            var url = string.Format("/exec/{0}/start",id);
-            var result = DockerHelper.ExecApi(url);
-            
-            return result;
+            var url = string.Format("/containers/{0}/start",id);
+            var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
+            var statusCode = result.Split(' ')[1];
+            return StatusCode(Convert.ToInt32(statusCode));
         }
 
         [HttpGet("Stop/{id}")]
-        public string Stop(int id)
+        public IActionResult Stop(string id)
         {
-            var url = string.Format("/exec/{0}/stop",id);
-            var result = DockerHelper.ExecApi(url);
-            
-            return result;
+            var url = string.Format("/containers/{0}/stop",id);
+            var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
+            var statusCode = result.Split(' ')[1];
+            Response.StatusCode = Convert.ToInt32(statusCode);
+            return StatusCode(Convert.ToInt32(statusCode));
         }
 
         [HttpGet("GetLogs/{id}")]
-        public string GetLogs(int id)
+        public string GetLogs(string id)
         {
-           var url = string.Format("/containers/{0}/logs",id);
-            var result = DockerHelper.ExecApi(url);
+            var url = string.Format("/containers/{0}/logs?stdout=true",id);
+            var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
             
             return result;  
         }
