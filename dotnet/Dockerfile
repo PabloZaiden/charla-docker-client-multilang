@@ -1,8 +1,10 @@
 FROM microsoft/dotnet 
-MAINTAINER MaxiG mrozado@lagash.com
+MAINTAINER MaxG mrozado@lagash.com
 
 COPY . /app 
 WORKDIR /app 
 RUN ["dotnet", "restore"] 
-EXPOSE 5000 
+RUN ["dotnet", "build"]
+EXPOSE 5000
+ENV ASPNETCORE_URLS http://*:5000
 ENTRYPOINT ["dotnet", "run"]
