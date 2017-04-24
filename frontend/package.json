@@ -1,0 +1,20 @@
+{
+  "name": "web-docker-monitor",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@types/body-parser": "0.0.29",
+    "@types/express": "^4.0.29",
+    "@types/node-uuid": "0.0.27",
+    "@types/request": "0.0.42",
+    "body-parser": "^1.13.2",
+    "hbs": "4.0.1",
+    "express": "^4.13.1",
+    "kwyjibo": "^1.0.30",
+    "node-uuid": "^1.4.7",
+    "request": "^2.79.0"
+  }
+}

@@ -1,0 +1,12 @@
+<html>
+    <body style="font-family: monospace">
+        <p>
+            <h1>Content of directory: {{path}} (<a href="{{downloadDirPath}}">download</a>)</h1>
+            <pre>
+                {{#each entries}}
+                    {{info}} <a href="{{link}}">{{name}}</a>
+                {{/each}}
+            </pre>
+        </p>
+    </body>
+</html>
