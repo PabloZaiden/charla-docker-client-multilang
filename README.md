@@ -44,11 +44,11 @@ Por ej:
 
 Partiendo de un frontend que no sabe nada de docker, consumir APIs en Java, NodeJS y DotNetCore para:
 
-- Java ():
+- Java:
     - Listar containers
     - Obtener info de containers
 
-- DotNetCore (`https://www.nuget.org/packages/Docker.DotNet/` o `http://stackoverflow.com/questions/40195290/how-to-connect-to-a-unix-domain-socket-in-net-core-in-c-sharp`):
+- DotNetCore:
     - Iniciar y parar un container
     - Ver logs
 
