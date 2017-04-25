@@ -6,3 +6,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports: 
       - 8888:8080
+
+  node:
+    build: ./node
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports: 
+      - 8887:3000
