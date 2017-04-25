@@ -15,6 +15,7 @@ namespace Docker.WebApi.Controllers
         [HttpGet]
         public string GetList()
         {
+            //return "Prueba";
             var url = "/images/json";
             var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
             return result;
