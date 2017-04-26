@@ -47,11 +47,23 @@ Partiendo de un frontend que no sabe nada de docker, consumir APIs en Java, Node
 - Java:
     - Listar containers
     - Obtener info de containers
+    - Ver logs
 
 - DotNetCore:
     - Iniciar y parar un container
-    - Ver logs
 
 - NodeJS
     - Listar contenido de un directorio del FileSystem del container
     - Descargar un archivo
+
+## Para levantar todo el entorno
+
+- `docker-compose up`
+
+## Para acceder directamente a cada endpoint:
+
+- *frontend*: `http://localhost:8000`
+
+- *dotnet*: `http://localhost:8886`
+- *node*: `http://localhost:8887`
+- *java*: `http://localhost:8888`
