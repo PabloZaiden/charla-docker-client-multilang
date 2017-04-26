@@ -28,6 +28,6 @@ public class DockerHelper
             payload += Encoding.ASCII.GetString(bytesReceived, 0, bytes);
         };
         
-        return payload;
+        return HttpResponse.Parse(payload);
     }
 }
