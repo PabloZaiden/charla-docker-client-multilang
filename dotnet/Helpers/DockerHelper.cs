@@ -5,12 +5,12 @@ using System.Text;
 
 public class DockerHelper
 {
-    public static string ExecApi(string url, string verb)
+    public static HttpResponse ExecApi(string url, string verb)
     {
         var unixSocket = "/var/run/docker.sock";
         var socket = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP);
         var unixEp = new UnixEndPoint(unixSocket);
-        string payload;
+        string payload = string.Empty;
         int response;
         byte[] bytesReceived = new Byte[1024*1024];
         socket.Connect(unixEp);
@@ -20,16 +20,14 @@ public class DockerHelper
         response = socket.Send(Encoding.UTF8.GetBytes(request));
         //response = socket.Send(Encoding.UTF8.GetBytes("\r\n"));
         int bytes;
+        //payload = Encoding.ASCII.GetString(bytesReceived, 0, bytes);
         
-        bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
-        payload = Encoding.ASCII.GetString(bytesReceived, 0, bytes);
-        
-        if(verb == HttpVerbs.GET)
+        while(socket.Available > 0)
         {
             bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
-            payload = Encoding.ASCII.GetString(bytesReceived, 0, bytes);
-        }
+            payload += Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+        };
         
-        return payload;
+        return HttpResponse.Parse(payload);
     }
 }
