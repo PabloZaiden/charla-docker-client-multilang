@@ -17,7 +17,7 @@ namespace Docker.WebApi.Controllers
         {
             var url = "/images/json";
             var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
-            return result;
+            return result.Body;
         }
 
         [HttpGet("Start/{id}")]
@@ -25,8 +25,7 @@ namespace Docker.WebApi.Controllers
         {
             var url = string.Format("/containers/{0}/start",id);
             var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
-            var statusCode = result.Split(' ')[1];
-            return StatusCode(Convert.ToInt32(statusCode));
+            return StatusCode(result.StatusCode);
         }
 
         [HttpGet("Stop/{id}")]
@@ -34,9 +33,25 @@ namespace Docker.WebApi.Controllers
         {
             var url = string.Format("/containers/{0}/stop",id);
             var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
-            var statusCode = result.Split(' ')[1];
-            Response.StatusCode = Convert.ToInt32(statusCode);
-            return StatusCode(Convert.ToInt32(statusCode));
+            return StatusCode(result.StatusCode);
+        }
+
+        [HttpGet("Restart/{id}")]
+        public IActionResult Restart(string id)
+        {
+            var url = string.Format("/containers/{0}/restart",id);
+            var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
+            return StatusCode(result.StatusCode);
+        }
+
+        [HttpGet("Processes/{id}")]
+        public string Processes(string id)
+        {
+            var url = string.Format("/containers/{0}/top",id);
+
+            var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
+            //var statusCode = result.Split(' ')[1];
+            return result;
         }
     }
 }
