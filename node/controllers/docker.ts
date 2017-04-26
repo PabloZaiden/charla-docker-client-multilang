@@ -27,6 +27,23 @@ class Docker {
             throw new K.NotFound("invalid path or id");
         }
 
+        let dummyEntries: LSEntry[] = [
+            {
+                info: "file info",
+                name: "myfilename.txt",
+                type: "file",
+                path: "/myfilename.txt"
+            },
+            {
+                info: "file info",
+                name: "myfilename.txt",
+                type: "file",
+                path: "/myfilename.txt"
+            }
+        ];
+
+        return dummyEntries;
+
         // TODO: obtener container, ejecutar LS y devovler lineas
     }
 
@@ -76,9 +93,11 @@ class Docker {
             throw new K.NotFound("invalid path or id");
         }
 
+        return "myfilecontent myfilecontent myfilecontent myfilecontent";
         // TODO: obtener container, descargar path y enviar stream
     }
 
+    /*
     private readStream(stream: any): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             var data = "";
@@ -100,6 +119,7 @@ class Docker {
             this.dockerAPI.modem.demuxStream(stream, finalStream, finalStream);
         });
     }
+    */
 }
 
 interface LSEntry {

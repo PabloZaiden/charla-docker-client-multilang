@@ -1,4 +1,5 @@
 package dockerapi;
+
 import com.github.dockerjava.api.command.InspectContainerResponse;
 
 public class Container {
@@ -16,5 +17,8 @@ public class Container {
         this.id = c.getId();
         this.image = c.getImage();
         this.isRunning = state.getRunning();
+    }
+
+    public Container() {
     }
 }
