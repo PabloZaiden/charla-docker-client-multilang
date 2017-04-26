@@ -50,8 +50,7 @@ namespace Docker.WebApi.Controllers
             var url = string.Format("/containers/{0}/top",id);
 
             var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
-            //var statusCode = result.Split(' ')[1];
-            return result;
+            return result.Body;
         }
     }
 }
