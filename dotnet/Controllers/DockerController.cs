@@ -15,28 +15,19 @@ namespace Docker.WebApi.Controllers
         [HttpGet]
         public string GetImages()
         {
-            var url = "/images/json";
-            var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
-            return result;
+            // TODO: Devolver listado de imagenes
         }
 
         [HttpGet("Start/{id}")]
         public IActionResult Start(string id)
         {
-            var url = string.Format("/containers/{0}/start",id);
-            var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
-            var statusCode = result.Split(' ')[1];
-            return StatusCode(Convert.ToInt32(statusCode));
+            // TODO: iniciar container
         }
 
         [HttpGet("Stop/{id}")]
         public IActionResult Stop(string id)
         {
-            var url = string.Format("/containers/{0}/stop",id);
-            var result = DockerHelper.ExecApi(url, HttpVerbs.POST);
-            var statusCode = result.Split(' ')[1];
-            Response.StatusCode = Convert.ToInt32(statusCode);
-            return StatusCode(Convert.ToInt32(statusCode));
+            // TODO: parar container
         }
     }
 }

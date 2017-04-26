@@ -10,10 +10,10 @@ let Parser = require("ansi-style-parser");
 @Controller("/docker")
 @DocController("Docker operations controller.")
 class Docker {
-    private dockerAPI = undefined;
+
 
     constructor() {
-        this.dockerAPI = new Dockerode({ socketPath: "/var/run/docker.sock" });
+        // TODO: inicializar cliente de docker
     }
 
     private handleError(context: Context, error: any): void {
@@ -27,47 +27,7 @@ class Docker {
             throw new K.NotFound("invalid path or id");
         }
 
-        let container = this.dockerAPI.getContainer(id);
-
-        container.exec({
-            AttachStdout: true,
-            AttachStderr: true,
-            Tty: false,
-            Cmd: ["ls", "-lahp", path]
-        }, (err, exec) => {
-            if (err) {
-                this.handleError(context, err);
-                return;
-            }
-
-            exec.start(async (err, stream) => {
-                if (err) {
-                    this.handleError(context, err);
-                    return;
-                }
-
-                let content: String;
-                try {
-                    content = await this.readStream(stream);
-                } catch (err) {
-                    this.handleError(context, err);
-                    return;
-                }
-
-                let lines = content.split(OS.EOL);
-
-                let entries: LSEntry[] = [];
-
-                for (let line of lines) {
-                    let entry = this.parseLine(line, path, id);
-                    if (entry != undefined) {
-                        entries.push(entry);
-                    }
-                }
-
-                context.response.send(entries);
-            });
-        });
+        // TODO: obtener container, ejecutar LS y devovler lineas
     }
 
     private parseLine(line: string, path: string, id: string) {
@@ -116,21 +76,7 @@ class Docker {
             throw new K.NotFound("invalid path or id");
         }
 
-        let container = this.dockerAPI.getContainer(id);
-
-        container.getArchive({
-            path: path
-        }, async (err, stream) => {
-            if (err) {
-                this.handleError(context, err);
-                return;
-            }
-
-            let fileName = path.split("/").join("__");
-            context.response.setHeader("Content-Type", "application/octet-stream");
-            context.response.setHeader("Content-Disposition", `attachment; filename="${fileName}.tar"`);
-            stream.pipe(context.response);
-        });
+        // TODO: obtener container, descargar path y enviar stream
     }
 
     private readStream(stream: any): Promise<string> {
