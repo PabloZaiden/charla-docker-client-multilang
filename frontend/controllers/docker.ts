@@ -7,16 +7,45 @@ import * as FS from "fs";
 import * as Path from "path";
 import * as UUID from "node-uuid";
 import * as Events from "events";
+import * as Request from "request";
+import * as AnsiParser from "ansi-parser";
 
 @Controller("/docker")
 @DocController("Docker operations controller.")
 class Docker {
 
+    static DotNetBaseURL = "http://dotnet:5000/api/docker/";
+    static JavaBaseURL = "http://java:8080/docker/";
+    static NodeBaseURL = "http://node:3000/docker/";
+
+    static request(url: string) {
+        return new Promise<string>((resolve, reject) => {
+
+            Request(url, { method: "get" }, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(body);
+                }
+            });
+        });
+    }
+
+    static async requestJson(url: string) {
+        let body = await Docker.request(url);
+
+        if (body !== undefined) {
+            return JSON.parse(body);
+        } else {
+            return undefined;
+        }
+    }
+
     static getPaths() {
         return {
             logs: K.getActionRoute(Docker, "logs"),
             start: K.getActionRoute(Docker, "start"),
-            stop: K.getActionRoute(Docker, "start"),
+            stop: K.getActionRoute(Docker, "stop"),
             ls: K.getActionRoute(Docker, "ls")
         };
     }
@@ -36,56 +65,70 @@ class Docker {
 
 
     @DocAction(`Lists existing containers`)
-    containers(context: Context): K.Renderable {
+    async containers(context: Context): Promise<K.Renderable> {
+        let containers = await Docker.requestJson(Docker.JavaBaseURL + "containers");
+
         return {
             $render_view: "containersList",
-            containers: [
-                {
-                    state: "running",
-                    status: "Up less than a second",
-                    name: "Container1",
-                    id: "qheq892ehq298hdqh7982eh89q",
-                    image: "namespace/image",
-                    isRunning: true
-                },{
-                    state: "stopped",
-                    status: "Stopped for 20 hours",
-                    name: "Container2",
-                    id: "qheq892ehq29adawd8hdqh7982eh89q",
-                    image: "namespace/image2",
-                    isRunning: false
-                }
-            ],
+            containers: containers,
             paths: Docker.getPaths()
-        }
+        };
     }
 
     @DocAction(`Starts a container`)
-    start(context: Context, @K.FromQuery("id") id: String): void {
+    async start(context: Context, @K.FromQuery("id") id: string) {
+        await Docker.request(Docker.DotNetBaseURL + `Start/${id}`);
+
+        context.response.redirect(K.getActionRoute(Docker, "index"));
     }
 
     @DocAction(`Stops a container`)
-    stop(context: Context, @K.FromQuery("id") id: String): void {
+    async stop(context: Context, @K.FromQuery("id") id: string) {
+        await Docker.request(Docker.DotNetBaseURL + `Stop/${id}`);
+
+        context.response.redirect(K.getActionRoute(Docker, "index"));
     }
 
     @DocAction(`Lists the content of a directory from a container`)
-    ls(context: Context, @K.FromQuery("id") id: String, @K.FromQuery("path") path: String) {
+    async ls(context: Context, @K.FromQuery("id") id: string, @K.FromQuery("path") path: string) {
+        let entries = await Docker.requestJson(Docker.NodeBaseURL + `ls?id=${id}&path=${path}`);
+
+        let model: K.Renderable = {
+            $render_view: "fsList",
+            path: path,
+            downloadDirPath: K.getActionRoute(Docker, "getArchive") + `?id=${id}&path=${path}`,
+            entries: []
+        };
+
+        for (let lsEntry of entries) {
+            let link: string;
+
+            if (lsEntry.type === "file") {
+                link = K.getActionRoute(Docker, "getArchive");
+            } else {
+                link = K.getActionRoute(Docker, "ls");
+            }
+
+            let entry = {
+                ...lsEntry,
+                link: link + `?id=${id}&path=${lsEntry.path}`
+            };
+            model.entries.push(entry);
+        }
+
+        return model;
     }
 
     @DocAction(`Gets the content of a file from a container`)
 
-    getArchive(context: Context, @K.FromQuery("id") id: String, @K.FromQuery("path") path: String) {
+    getArchive(context: Context, @K.FromQuery("id") id: string, @K.FromQuery("path") path: string) {
+        Request(Docker.NodeBaseURL + `getArchive?id=${id}&path=${path}`).pipe(context.response);
     }
 
     @DocAction(`Shows the logs for the container with the id sent in the querystring`)
-    logs(context: Context, @K.FromQuery("id") id: String): void {
-    }
-
-    private readStream(stream: any): Promise<string> {
-        return undefined
-    }
-
-    private emitterToPromise<T extends Events.EventEmitter>(emitter: T, resolveEvent?: string): Promise<T> {
-        return undefined;
+    async logs(context: Context, @K.FromQuery("id") id: string) {
+        let rawLogs = await Docker.request(Docker.JavaBaseURL + `logs/${id}`);
+        let html = AnsiParser.removeAnsi(rawLogs);
+        context.response.send("<html><body><pre>" + html + "</pre></body></html>");
     }
 }

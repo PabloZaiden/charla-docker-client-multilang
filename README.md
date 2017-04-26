@@ -22,21 +22,21 @@ Que cosas puedo hacer el API de Docker?
 Por ej:    
 - Ejecutar y administrar containers
     ```http
-    GET http`//unix:/var/run/docker.sock:/containers/json HTTP/1.1
+    GET http://unix:/var/run/docker.sock:/containers/json HTTP/1.1
     host: localhost
     ```
 - Leer logs y metricas sobre los containers
     ```http
-    GET http`//unix:/var/run/docker.sock:/containers/{id}/logs?stdout=true HTTP/1.1
+    GET http://unix:/var/run/docker.sock:/containers/{id}/logs?stdout=true HTTP/1.1
     host: localhost
     ```
 - Obtener y administrar imagenes
     ```http
-    GET http`//unix:/var/run/docker.sock:/images/json HTTP/1.1
+    GET http://unix:/var/run/docker.sock:/images/json HTTP/1.1
     host: localhost
     ```
     ```http
-    GET http`//unix:/var/run/docker.sock:/images/search?term=java HTTP/1.1
+    GET http://unix:/var/run/docker.sock:/images/search?term=java HTTP/1.1
     host: localhost
     ```
 

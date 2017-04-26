@@ -182,7 +182,7 @@
                   <a class="action view-logs" href="{{../paths.logs}}?id={{id}}"><span class="icon-view">✚</span>View logs</a>
                     {{#if isRunning}}
                         <a class="action stop" href="{{../paths.stop}}?id={{id}}"><span class="icon-stop">■</span>Stop</a>
-                        <a class="action browse" href="{{../paths.ls}}?id={{id}}>&path=/"><span class="icon icon-browser">&#128269; </span>Browse filesystem</a>
+                        <a class="action browse" href="{{../paths.ls}}?id={{id}}&path=/"><span class="icon icon-browser">&#128269; </span>Browse filesystem</a>
                     {{else}}
                         <a class="action start" href="{{../paths.start}}?id={{id}}"><span class="icon-play">►</span>Start</a>                  
                   {{/if}}

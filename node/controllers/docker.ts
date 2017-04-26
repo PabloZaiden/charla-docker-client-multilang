@@ -60,7 +60,9 @@ class Docker {
 
                 for (let line of lines) {
                     let entry = this.parseLine(line, path, id);
-                    entries.push(entry);
+                    if (entry != undefined) {
+                        entries.push(entry);
+                    }
                 }
 
                 context.response.send(entries);
@@ -103,6 +105,8 @@ class Docker {
             };
 
             return entry;
+        } else {
+            return undefined;
         }
     }
 

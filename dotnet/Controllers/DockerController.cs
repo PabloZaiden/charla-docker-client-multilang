@@ -40,14 +40,5 @@ namespace Docker.WebApi.Controllers
             Response.StatusCode = Convert.ToInt32(statusCode);
             return StatusCode(Convert.ToInt32(statusCode));
         }
-
-        [HttpGet("GetLogs/{id}")]
-        public string GetLogs(string id)
-        {
-            var url = string.Format("/containers/{0}/logs?stdout=true",id);
-            var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
-            
-            return result;  
-        }
     }
 }

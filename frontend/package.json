@@ -15,6 +15,7 @@
     "express": "^4.13.1",
     "kwyjibo": "^1.0.30",
     "node-uuid": "^1.4.7",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "ansi-parser": "3.2.7"
   }
 }
