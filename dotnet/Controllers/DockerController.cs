@@ -13,15 +13,13 @@ namespace Docker.WebApi.Controllers
     public class DockerController : Controller
     {
         [HttpGet]
-        public string GetList()
+        public string GetImages()
         {
-            //return "Prueba";
             var url = "/images/json";
             var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
             return result;
         }
 
-        // GET api/values/5
         [HttpGet("Start/{id}")]
         public IActionResult Start(string id)
         {
