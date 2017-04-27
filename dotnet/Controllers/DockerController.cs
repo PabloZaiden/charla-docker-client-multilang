@@ -58,7 +58,6 @@ namespace Docker.WebApi.Controllers
             {
                 return "";
             }
-            
             return result.Body;
         }
     }
