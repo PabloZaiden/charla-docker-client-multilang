@@ -2,14 +2,16 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 public class DockerHelper
 {
+    public static string socketLocation = "/var/run/docker.sock";
+    
     public static HttpResponse ExecApi(string url, string verb)
     {
-        var unixSocket = "/var/run/docker.sock";
         var socket = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP);
-        var unixEp = new UnixEndPoint(unixSocket);
+        var unixEp = new UnixEndPoint(socketLocation);
         string payload = string.Empty;
         int response;
         byte[] bytesReceived = new Byte[1024*1024];
@@ -18,14 +20,16 @@ public class DockerHelper
         "Host: locahost\r\n" +
         "\r\n";
         response = socket.Send(Encoding.UTF8.GetBytes(request));
-        //response = socket.Send(Encoding.UTF8.GetBytes("\r\n"));
+
         int bytes;
         //payload = Encoding.ASCII.GetString(bytesReceived, 0, bytes);
-        
-        while(socket.Available > 0)
+        //System.Threading.Thread.Sleep(20);
+        bool keepReading = true;
+        while(socket.Available > 0 || keepReading)
         {
             bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
             payload += Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+            keepReading = string.IsNullOrEmpty(payload) || !payload.Contains("\r\n\r\n");
         };
         
         return HttpResponse.Parse(payload);

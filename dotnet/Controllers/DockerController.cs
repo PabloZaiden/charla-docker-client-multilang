@@ -17,6 +17,11 @@ namespace Docker.WebApi.Controllers
         {
             var url = "/images/json";
             var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
+            if (result == null)
+            {
+                return "";
+            }
+            
             return result.Body;
         }
 
@@ -48,8 +53,11 @@ namespace Docker.WebApi.Controllers
         public string Processes(string id)
         {
             var url = string.Format("/containers/{0}/top",id);
-
             var result = DockerHelper.ExecApi(url, HttpVerbs.GET);
+            if (result == null)
+            {
+                return "";
+            }
             return result.Body;
         }
     }
